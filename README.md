@@ -4,7 +4,7 @@ A website that tests **100% of a general ledger** for the fraud-risk warning sig
 (AU-C 240 / PCAOB AS 2401) ask auditors to look at. It ranks entries by risk, tells you what to do next, runs a
 Benford's Law analysis, finds double payments and selects a Monetary Unit Sample.
 
-**[▶ Open the live site](https://ledgerlens-6n89b9tdyecztmfkja8akz.streamlit.app)**
+**[▶ Open the live site](https://tristan-audit-analytics.streamlit.app)**
 
 ![Site screenshot](docs/screenshot.jpg)
 

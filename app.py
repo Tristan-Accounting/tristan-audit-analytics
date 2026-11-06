@@ -54,7 +54,7 @@ def plot(fig: go.Figure) -> None:
 
 
 # --- Top bar -------------------------------------------------------------------
-bar_brand, bar_data, bar_settings = st.columns([6, 1.7, 1.7], vertical_alignment="center")
+bar_brand, bar_data, bar_settings = st.columns([4, 2.2, 1.8], vertical_alignment="center")
 bar_brand.html(ui.brand())
 
 with bar_data.popover("Use your own data", icon=":material/upload_file:", width="stretch"):
