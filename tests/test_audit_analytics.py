@@ -2,8 +2,8 @@
 import pandas as pd
 import pytest
 
-from ledgerlens import benford, procedures, sampling
-from ledgerlens.generate_data import generate
+from audit_analytics import benford, procedures, sampling
+from audit_analytics.generate_data import generate
 
 
 @pytest.fixture(scope="module")

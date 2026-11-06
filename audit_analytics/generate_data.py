@@ -1,6 +1,6 @@
 """Generate a synthetic FY2025 general ledger with planted anomalies.
 
-Run:  python -m ledgerlens.generate_data
+Run:  python -m audit_analytics.generate_data
 
 Writes two files to data/:
   sample_general_ledger.csv  - ~5,000 journal entries for a fictional distributor

@@ -1,12 +1,12 @@
-# 🔎 LedgerLens: Audit Analytics for Journal Entry Testing
+# Tristan Audit Analytics
 
-LedgerLens tests **100% of a general ledger** for the fraud-risk characteristics that the auditing standards
-(AU-C 240 / PCAOB AS 2401) ask auditors to look at. It ranks entries by risk, runs a Benford's Law analysis,
-finds duplicate vendor payments and selects a Monetary Unit Sample, all in one interactive dashboard.
+A website that tests **100% of a general ledger** for the fraud-risk warning signs that the auditing standards
+(AU-C 240 / PCAOB AS 2401) ask auditors to look at. It ranks entries by risk, tells you what to do next, runs a
+Benford's Law analysis, finds double payments and selects a Monetary Unit Sample.
 
-**[▶ Live demo](https://YOUR-APP.streamlit.app)** <!-- replace after deploying -->
+**[▶ Open the live site](https://ledgerlens-6n89b9tdyecztmfkja8akz.streamlit.app)**
 
-![Dashboard screenshot](docs/screenshot.png) <!-- add a screenshot after deploying -->
+![Site screenshot](docs/screenshot.jpg)
 
 ## Why I built it
 
@@ -30,32 +30,33 @@ What it found:
   the $10,000 approval limit. Benford's Law independently flags the same user: the digit 9 is
   over-represented by 11 percentage points (chi-square p < 0.0001). The rest of the population conforms closely (MAD 0.003).
 - **Management override:** a manager posted and approved their own round-dollar "management fees"
-  ($25k–$100k), some of them on weekends. These are the highest-risk entries.
+  ($25k–$100k), some of them on weekends. Three of the four high-risk entries are theirs.
 - **Duplicate payments:** 10 vendor payments re-entered with the invoice number keyed differently
   (`INV-48213` vs `inv-48213` vs `INV-048213`), which is how duplicates usually get past ERP checks.
 - **Cut-off risk:** manual revenue entries booked in the last days of each quarter.
 
 The 3 false positives are routine entries that happen to fall just under $10,000, one each from
-three different people. That's why the dashboard shows exceptions by preparer: the pattern matters more
+three different people. That's why the site shows exceptions by preparer: the pattern matters more
 than any single flag.
 
 ## Features
 
-| Tab | What it does |
+| Section | What it does |
 |---|---|
-| **Overview** | Risk-ranked exceptions, exceptions by test and by month, CSV export |
-| **JE Tests** | 8 tests with adjustable parameters and the audit reason for each |
-| **Benford's Law** | First-digit test with MAD (Nigrini), z-stats, chi-square, ranked by preparer |
-| **Duplicate Payments** | Same vendor and amount within N days, with fuzzy invoice matching |
-| **MUS Sampling** | AICPA sample-size formula, systematic PPS selection, exportable sample |
-| **Methodology** | How each test works and which standards it supports |
+| **Summary** | Scorecards for all 8 checks, a ranked review list, patterns by month and person, CSV export |
+| **The 8 checks** | Every flagged entry, why the check matters and what to do next |
+| **Number patterns** | Benford's Law in plain English, with MAD, z-stats and chi-square for auditors |
+| **Double payments** | Same vendor and amount within N days, matching invoice numbers typed differently |
+| **Pick a sample** | AICPA sample-size formula, systematic PPS selection, exportable sample |
+| **How it works** | The method and the audit standards behind each check |
 
-You can also upload your own ledger CSV (layout on the Methodology tab).
+Plain-English answers come first, and the technical detail sits one click away. You can also upload your own
+ledger using the built-in template.
 
 ## Run it locally
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/ledgerlens.git
+git clone https://github.com/Tristan-Accounting/ledgerlens.git
 cd ledgerlens
 python -m venv .venv
 .venv\Scripts\activate          # macOS/Linux: source .venv/bin/activate
@@ -63,18 +64,19 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Regenerate the sample data with `python -m ledgerlens.generate_data`. Run the tests with `pytest`.
+Regenerate the sample data with `python -m audit_analytics.generate_data`. Run the tests with `pytest`.
 
 ## How it's built
 
 ```
-app.py                     Streamlit dashboard
-ledgerlens/
+app.py                     the site
+audit_analytics/
   procedures.py            the 8 journal entry tests + risk scoring
   benford.py               Benford's Law (MAD, z-stat, chi-square)
   sampling.py              Monetary Unit Sampling
   generate_data.py         synthetic ledger with planted anomalies
   config.py                chart of accounts, holidays, default thresholds
+  ui.py                    design system: CSS, components, chart styling
 tests/                     pytest suite: checks every planted anomaly is caught
 ```
 

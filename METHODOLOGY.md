@@ -3,7 +3,7 @@
 Management override of controls is a fraud risk in every audit. The auditing standards
 (**AICPA AU-C 240** and **PCAOB AS 2401**, *Consideration of Fraud in a Financial Statement Audit*)
 require auditors to test the appropriateness of journal entries. Auditors do this by picking out
-entries that have known fraud-risk characteristics. LedgerLens automates that selection step
+entries that have known fraud-risk characteristics. This app automates that selection step
 across the whole population, not a handful of entries.
 
 ## The tests
@@ -25,7 +25,7 @@ High ≥ 5, Medium 3–4, Low 1–2. A flag isn't a finding. It's an entry to pu
 ## Benford's Law
 
 In many naturally occurring financial datasets, the leading digit is 1 about 30.1% of the time
-and 9 only 4.6% of the time. LedgerLens compares the actual first-digit distribution to Benford's and reports:
+and 9 only 4.6% of the time. The app compares the actual first-digit distribution to Benford's and reports:
 
 - **MAD (Mean Absolute Deviation)**, using Nigrini's first-digit conformity ranges
   (≤0.006 close, ≤0.012 acceptable, ≤0.015 marginal, above that nonconformity).
@@ -35,7 +35,7 @@ and 9 only 4.6% of the time. LedgerLens compares the actual first-digit distribu
 
 ## Monetary Unit Sampling (MUS)
 
-For substantive testing of an account, LedgerLens picks a probability-proportional-to-size sample
+For substantive testing of an account, The app picks a probability-proportional-to-size sample
 (**AU-C 530 / PCAOB AS 2315**, *Audit Sampling*). Sample size follows the AICPA *Audit Sampling* guide:
 
 > n = (population value × confidence factor) ÷ (tolerable misstatement − expected misstatement × expansion factor)
@@ -59,10 +59,10 @@ Upload a CSV with one row per journal entry.
 | `description`, `vendor`, `invoice_number` | | Consulting services, Apex Consulting LLC, INV-48213 |
 
 Tests that need an optional column return no exceptions if the column is missing.
-Everything runs in your browser session and nothing is stored.
+The app does not save uploaded files to disk. This is a public demo, so never upload real client data.
 
 ## Limitations
 
-- The holiday calendar is US federal holidays for FY2025 (`ledgerlens/config.py`).
+- The holiday calendar is US federal holidays for FY2025 (`audit_analytics/config.py`).
 - Each entry is one debit/credit pair. Multi-line entries would need to be summarised first.
 - Analytics show where to look. They don't replace auditor judgment, inquiry or vouching to support.

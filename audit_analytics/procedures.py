@@ -14,8 +14,8 @@ import pandas as pd
 from .config import DEFAULT_PARAMS, HOLIDAYS
 
 REQUIRED_COLUMNS = ["je_id", "posted_at", "amount", "created_by"]
-OPTIONAL_COLUMNS = ["source", "approved_by", "debit_account", "credit_account",
-                    "description", "vendor", "invoice_number"]
+OPTIONAL_COLUMNS = ["source", "approved_by", "debit_account", "credit_account", "debit_account_name",
+                    "credit_account_name", "description", "vendor", "invoice_number"]
 
 
 def prepare(df: pd.DataFrame) -> pd.DataFrame:
@@ -157,6 +157,17 @@ TESTS: list[Test] = [
 ]
 TESTS_BY_KEY = {t.key: t for t in TESTS}
 
+NEXT_STEPS = {
+    "weekend_holiday": "Ask who posted it and why it couldn't wait until the next business day.",
+    "after_hours": "Confirm who really posted it, then check the support for the entry.",
+    "round_amount": "Ask for the calculation or invoice behind the number.",
+    "just_below_threshold": "Look for related entries to the same vendor, and confirm the vendor is real.",
+    "self_approved": "Get an independent review, and find out how the system allowed it.",
+    "missing_approval": "Find out why it wasn't approved, and get it reviewed now.",
+    "period_end_revenue": "Match it to a contract and delivery date to confirm it belongs in this period.",
+    "duplicate_payment": "Compare both invoices. If it's a true duplicate, ask the vendor for a refund.",
+}
+
 
 def risk_level(score: int) -> str:
     if score >= 5:
@@ -179,4 +190,6 @@ def run_all(df: pd.DataFrame, **params) -> pd.DataFrame:
     out["risk_level"] = out["risk_score"].map(risk_level)
     out["exceptions"] = out[flag_cols].apply(
         lambda r: "; ".join(TESTS_BY_KEY[c[5:]].name for c in flag_cols if r[c]), axis=1)
+    out["next_steps"] = out[flag_cols].apply(
+        lambda r: " ".join(NEXT_STEPS[c[5:]] for c in flag_cols if r[c]), axis=1)
     return out
