@@ -56,8 +56,8 @@ ledger using the built-in template.
 ## Run it locally
 
 ```bash
-git clone https://github.com/Tristan-Accounting/ledgerlens.git
-cd ledgerlens
+git clone https://github.com/Tristan-Accounting/tristan-audit-analytics.git
+cd tristan-audit-analytics
 python -m venv .venv
 .venv\Scripts\activate          # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt

@@ -12,7 +12,7 @@ from audit_analytics.config import DEFAULT_PARAMS
 
 ROOT = Path(__file__).parent
 DATA_DIR = ROOT / "data"
-REPO_URL = "https://github.com/Tristan-Accounting/ledgerlens"
+REPO_URL = "https://github.com/Tristan-Accounting/tristan-audit-analytics"
 
 st.set_page_config(page_title="Tristan Audit Analytics | Journal Entry Testing",
                    page_icon=":material/fact_check:", layout="wide", initial_sidebar_state="collapsed")
