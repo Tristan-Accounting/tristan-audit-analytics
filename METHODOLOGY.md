@@ -64,5 +64,6 @@ The app does not save uploaded files to disk. This is a public demo, so never up
 ## Limitations
 
 - The holiday calendar is US federal holidays for FY2025 (`audit_analytics/config.py`).
+- The sample ledger's anomalies were planted by the author, so catching all of them shows the checks work as designed, not how they'd perform on real data.
 - Each entry is one debit/credit pair. Multi-line entries would need to be summarised first.
 - Analytics show where to look. They don't replace auditor judgment, inquiry or vouching to support.

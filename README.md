@@ -84,6 +84,8 @@ Python · pandas · NumPy · Streamlit · Plotly · pytest
 
 ## Limitations and next steps
 
+- I planted the sample ledger's anomalies myself, so catching all 73 shows the checks work as designed,
+  not how they'd perform on real data. Testing on a real or public dataset is the next step.
 - Each entry is a single debit/credit pair. Real ERP extracts have multi-line entries.
 - Next ideas: a completeness check (reconcile the ledger to the trial balance), gaps in JE numbering,
   seldom-used accounts, and testing against a public dataset.

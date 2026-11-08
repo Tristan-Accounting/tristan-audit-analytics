@@ -124,7 +124,9 @@ with tab_find:
         else:
             top = hits["created_by"].value_counts()
             value = ui.money(hits["amount"].abs().sum())
-            if len(hits) >= 3 and top.iloc[0] / len(hits) >= 0.6:
+            if hits["source"].str.lower().eq("automated").all():
+                detail = f"All came through automated postings. Total {value}."
+            elif len(hits) >= 3 and top.iloc[0] / len(hits) >= 0.6:
                 detail = f"<code>{ui.esc(top.index[0])}</code> accounts for {top.iloc[0]} of {len(hits)}. Total {value}."
             else:
                 detail = f"Spread across {len(top)} people. Total {value}."
@@ -253,9 +255,12 @@ with tab_mus:
                        "Bigger amounts are more likely to be picked."))
     accounts = scored[["debit_account", "debit_account_name"]].drop_duplicates().sort_values("debit_account")
     opts = ["All entries"] + [f"{a} - {n}" if n else a for a, n in accounts.itertuples(index=False) if a]
+    default = "1200 - Accounts Receivable"
     c = st.columns(2)
-    acct = c[0].selectbox("Which account are you testing?", opts, index=opts.index("2000 - Accounts Payable")
-                          if "2000 - Accounts Payable" in opts else 0)
+    acct = c[0].selectbox("What are you sampling? (entries debited to)", opts,
+                          index=opts.index(default) if default in opts else 0,
+                          help="Each entry debited to this account is one sampling unit. "
+                               "For Accounts Receivable, that's each sales invoice.")
     conf = c[1].selectbox("How confident do you need to be?", [0.80, 0.90, 0.95, 0.99], index=2,
                           format_func=lambda x: f"{x:.0%}")
     population = scored if acct == "All entries" else scored[scored["debit_account"] == acct.split(" - ")[0]]
@@ -263,7 +268,8 @@ with tab_mus:
     with st.expander("Technical settings for auditors"):
         a, b = st.columns(2)
         tolerable = a.number_input("Tolerable misstatement ($)", 1_000, None, max(1_000, int(pv * 0.05)), step=1_000,
-                                   help="The most error you could accept in this account. Defaults to 5% of its value.")
+                                   help="The most error you could accept. Defaults to 5% of the population value; "
+                                        "in practice you'd base it on performance materiality.")
         expected = b.number_input("Expected misstatement ($)", 0, None, 0, step=1_000,
                                   help="How much error you expect to find.")
     try:
@@ -274,9 +280,12 @@ with tab_mus:
         st.error(str(e))
     else:
         sample = sampling.select(population, n)
-        st.html(ui.stats([("Items to test", f"{len(sample.selections):,}"), ("Account value", ui.money(pv)),
+        st.html(ui.stats([("Items to test", f"{len(sample.selections):,}"), ("Population value", ui.money(pv)),
                           ("One pick about every", ui.money(sample.interval)),
                           ("Too large to skip", str(int(sample.selections["individually_significant"].sum())))]))
+        if len(sample.selections) < n:
+            st.caption(f"The formula calls for {n} selections. Items larger than the interval can be picked more "
+                       f"than once, so they cover {len(sample.selections)} different items.")
         st.html(f'<p class="ll-formula">n = (population × {sampling.CONFIDENCE_FACTORS[conf]:.2f}) ÷ (tolerable − '
                 f'expected × {sampling.EXPANSION_FACTORS[conf]}) = {n} · random start {ui.money(sample.random_start)}</p>')
         show_table(sample.selections, extra=["hits", "individually_significant"])
